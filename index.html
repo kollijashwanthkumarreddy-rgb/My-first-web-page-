@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0f0c" />
+  <meta name="description" content="GreenPad — personal notes, work hours and workouts." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>GreenPad</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">G</span><span>GreenPad</span></div>
+      <nav>
+        <button class="nav-item active" data-section="dashboard">⌂ <span>Dashboard</span></button>
+        <button class="nav-item" data-section="notes">▤ <span>Notes</span></button>
+        <button class="nav-item" data-section="work">◷ <span>Work Hours</span></button>
+        <button class="nav-item" data-section="workouts">◆ <span>Workouts</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <button class="nav-item" data-section="settings">⚙ <span>Settings</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow" id="greeting">Good day</div>
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="top-actions">
+          <div class="clock" id="clock">--:--:--</div>
+          <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">☀</button>
+        </div>
+      </header>
+
+      <section id="dashboard" class="page active">
+        <div class="search-wrap">
+          <span>⌕</span><input id="globalSearch" placeholder="Search your notes..." autocomplete="off" />
+        </div>
+        <div class="hero-grid">
+          <div class="hero-card">
+            <span class="label">TODAY</span>
+            <strong id="todayDate">—</strong>
+            <p>Your personal workspace for notes, focus and fitness.</p>
+            <button class="primary" data-action="new-note">＋ New Note</button>
+          </div>
+          <div class="stat-card"><span>WORK HOURS</span><strong id="dashWork">0h 00m</strong><small>Today's tracked time</small></div>
+          <div class="stat-card"><span>WORKOUT</span><strong id="dashWorkout">0 min</strong><small>Today's workout time</small></div>
+        </div>
+        <div class="section-heading"><h2>Recent notes</h2><button class="text-btn" data-section="notes">View all →</button></div>
+        <div id="recentNotes" class="notes-grid"></div>
+      </section>
+
+      <section id="notes" class="page">
+        <div class="section-heading"><div><h2>All Notes</h2><p class="muted">Capture ideas and keep everything organized.</p></div><button class="primary" data-action="new-note">＋ New Note</button></div>
+        <div class="search-wrap"><span>⌕</span><input id="noteSearch" placeholder="Search notes by title, content or tag..." /></div>
+        <div class="filter-row" id="tagFilters"></div>
+        <div id="notesGrid" class="notes-grid"></div>
+      </section>
+
+      <section id="work" class="page">
+        <div class="section-heading"><div><h2>Work Hours</h2><p class="muted">Track focused work sessions.</p></div></div>
+        <div class="work-panel">
+          <div class="timer" id="workTimer">00:00:00</div>
+          <div class="timer-status" id="workStatus">Ready to work</div>
+          <button class="primary big" id="workToggle">▶ Start Work</button>
+        </div>
+        <div class="section-heading"><h2>Today's sessions</h2><strong id="workTotal">0h 00m</strong></div>
+        <div id="workSessions" class="list"></div>
+      </section>
+
+      <section id="workouts" class="page">
+        <div class="section-heading"><div><h2>Workouts</h2><p class="muted">Log your training and build consistency.</p></div><button class="primary" data-action="new-workout">＋ Log Workout</button></div>
+        <div class="stat-strip"><div><span>THIS WEEK</span><strong id="weekWorkout">0 min</strong></div><div><span>SESSIONS</span><strong id="workoutCount">0</strong></div></div>
+        <div id="workoutList" class="list"></div>
+      </section>
+
+      <section id="settings" class="page">
+        <div class="section-heading"><div><h2>Settings</h2><p class="muted">Personalize GreenPad.</p></div></div>
+        <div class="settings-card">
+          <div><div><strong>Appearance</strong><p>Switch between dark and bright mode.</p></div><button class="secondary" id="settingsTheme">Toggle theme</button></div>
+          <div><div><strong>Local data</strong><p>Your notes and trackers are saved in this browser.</p></div><button class="danger" id="clearData">Clear all data</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <div class="modal-head"><h2 id="modalTitle">New Note</h2><button class="icon-btn" id="closeModal">×</button></div>
+      <form id="noteForm">
+        <input type="hidden" id="noteId" />
+        <label>Title<input id="noteTitle" required maxlength="80" placeholder="Note title" /></label>
+        <label>Category<select id="noteTag"><option>Personal</option><option>Work</option><option>Ideas</option><option>Study</option><option>Fitness</option></select></label>
+        <label>Note<textarea id="noteContent" required rows="8" placeholder="Write your note..."></textarea></label>
+        <div class="form-actions"><button type="button" class="secondary" id="cancelModal">Cancel</button><button class="primary">Save Note</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="workoutModal">
+    <div class="modal-card">
+      <div class="modal-head"><h2>Log Workout</h2><button class="icon-btn" id="closeWorkout">×</button></div>
+      <form id="workoutForm">
+        <label>Workout<input id="workoutName" required placeholder="e.g. Upper body" /></label>
+        <label>Duration (minutes)<input id="workoutDuration" type="number" min="1" max="1440" required placeholder="45" /></label>
+        <label>Details<textarea id="workoutDetails" rows="4" placeholder="Sets, reps, distance, notes..."></textarea></label>
+        <div class="form-actions"><button type="button" class="secondary" id="cancelWorkout">Cancel</button><button class="primary">Save Workout</button></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
